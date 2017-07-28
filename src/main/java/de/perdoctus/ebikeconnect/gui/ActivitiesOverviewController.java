@@ -48,6 +48,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
@@ -239,14 +240,19 @@ public class ActivitiesOverviewController {
             chartRangeSlider.setHighValue(chartRangeSlider.getHighValue() - scrollAmount);
         });
 
-        xAxis.setOnMouseMoved(event -> {
+        chart.setOnMouseMoved(event -> {
             if (getCurrentActivityDetailsGroup() == null) {
                 return;
             }
 
-            final Number valueForDisplay = xAxis.getValueForDisplay(event.getX());
+            double xPosInAxis = xAxis.sceneToLocal(new Point2D(event.getSceneX(), event.getSceneY())).getX();
+            final Number valueForDisplay = xAxis.getValueForDisplay(xPosInAxis);
             final List<Coordinate> trackpoints = getCurrentActivityDetailsGroup().getJoinedTrackpoints();
-            final int index = valueForDisplay.intValue();
+            // trackpoints are not mapped 1:1 to graph plotted values (e.g. cadences). 
+            // However they seems to be evenly distributed along plotted values.
+            final long totalCadencesCount = getCurrentActivityDetailsGroup().getActivitySegments().stream().flatMap(as -> as.getCadences().stream()).count();
+            final double trackpointsPerCadence = (double) trackpoints.size() / (double) totalCadencesCount;
+            final int index = (int) (valueForDisplay.doubleValue() * trackpointsPerCadence);
             if (index >= 0 && index < trackpoints.size()) {
                 final Coordinate coordinate = trackpoints.get(index);
                 if (coordinate.isValid()) {
