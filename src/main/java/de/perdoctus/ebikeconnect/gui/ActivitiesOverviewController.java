@@ -326,6 +326,7 @@ public class ActivitiesOverviewController {
         final List<ActivityDetails> activityDaySegments = activityDetailsGroup.getActivitySegments();
 
         chart.getData().clear();
+        chartRangeSlider.setMax(0);
         addChartSeries(rb.getString("altitude"), activityDaySegments.stream().filter(ad -> ad.getAltitudes() != null).flatMap(ad -> ad.getAltitudes().stream()).collect(toList()));
         addChartSeries(rb.getString("speed"), activityDaySegments.stream().filter(ad -> ad.getSpeeds() != null).flatMap(ad -> ad.getSpeeds().stream()).collect(toList()));
         addChartSeries(rb.getString("heart-rate"), activityDaySegments.stream().filter(ad -> ad.getHeartRate() != null).flatMap(ad -> ad.getHeartRate().stream()).collect(toList()));
@@ -371,9 +372,10 @@ public class ActivitiesOverviewController {
             }
         }
 
-        chartRangeSlider.setMax(samples.size());
-
         if (data.size() > 0) {
+            if (chartRangeSlider.getMax() < samples.size()) {
+                chartRangeSlider.setMax(samples.size());
+            }
             chart.getData().add(series);
         }
     }
