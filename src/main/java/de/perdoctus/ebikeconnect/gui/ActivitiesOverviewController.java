@@ -365,12 +365,16 @@ public class ActivitiesOverviewController {
 
         final ObservableList<XYChart.Data<Number, Number>> data = series.getData();
 
+        Number previousValue = null;
         for (int i = 0; i < samples.size(); i += 1) {
-            final Number number = samples.get(i);
+            Number number = samples.get(i);
+            if (number == null)
+                number = previousValue; // use previous value so graph looks like the online version.
             if (number != null) {
                 final XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(i, number);
                 data.add(dataPoint);
             }
+            previousValue = number;
         }
 
         if (data.size() > 0) {
