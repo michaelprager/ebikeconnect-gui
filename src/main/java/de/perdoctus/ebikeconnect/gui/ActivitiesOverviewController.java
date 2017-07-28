@@ -329,6 +329,7 @@ public class ActivitiesOverviewController {
         chartRangeSlider.setMax(0);
         addChartSeries(rb.getString("altitude"), activityDaySegments.stream().filter(ad -> ad.getAltitudes() != null).flatMap(ad -> ad.getAltitudes().stream()).collect(toList()));
         addChartSeries(rb.getString("speed"), activityDaySegments.stream().filter(ad -> ad.getSpeeds() != null).flatMap(ad -> ad.getSpeeds().stream()).collect(toList()));
+        addChartSeries(rb.getString("power-output"), activityDaySegments.stream().filter(ad -> ad.getPowerOutput() != null).flatMap(ad -> ad.getPowerOutput().stream()).collect(toList()));
         addChartSeries(rb.getString("heart-rate"), activityDaySegments.stream().filter(ad -> ad.getHeartRate() != null).flatMap(ad -> ad.getHeartRate().stream()).collect(toList()));
         addChartSeries(rb.getString("cadence"), activityDaySegments.stream().filter(ad -> ad.getCadences() != null).flatMap(ad -> ad.getCadences().stream()).collect(toList()));
         addChartSeries(rb.getString("driver-torque"), activityDaySegments.stream().filter(ad -> ad.getDriverTorques() != null).flatMap(ad -> ad.getDriverTorques().stream()).collect(toList()));

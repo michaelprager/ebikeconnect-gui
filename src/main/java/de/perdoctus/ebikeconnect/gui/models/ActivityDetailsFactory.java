@@ -44,6 +44,7 @@ public class ActivityDetailsFactory {
         activityDetails.setCadences(toSingleList(activityDetailsResponse.getCadence()));
         activityDetails.setHeartRate(toSingleList(activityDetailsResponse.getHeartRate()));
         activityDetails.setSpeeds(toSingleList(activityDetailsResponse.getSpeed()));
+        activityDetails.setPowerOutput(toSingleList(activityDetailsResponse.getPowerOutput()));
 
         return activityDetails;
     }

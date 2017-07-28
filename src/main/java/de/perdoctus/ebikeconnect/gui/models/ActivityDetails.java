@@ -32,7 +32,7 @@ import java.util.List;
 
 public class ActivityDetails implements Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     private ActivityHeader activityHeader;
 
@@ -40,6 +40,7 @@ public class ActivityDetails implements Serializable {
     private List<Float> altitudes;
     private List<Float> speeds;
     private List<Short> cadences;
+    private List<Integer> powerOutput;
 
     private List<Coordinate> trackPoints;
     private List<Float> driverTorques;
@@ -169,5 +170,13 @@ public class ActivityDetails implements Serializable {
 
     public List<Short> getGainedDistances() {
         return gainedDistances;
+    }
+
+    public List<Integer> getPowerOutput() {
+        return powerOutput;
+    }
+
+    public void setPowerOutput(List<Integer> powerOutput) {
+        this.powerOutput = powerOutput;
     }
 }
