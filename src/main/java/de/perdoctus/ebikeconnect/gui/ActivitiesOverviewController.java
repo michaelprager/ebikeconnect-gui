@@ -382,6 +382,7 @@ public class ActivitiesOverviewController {
                 chartRangeSlider.setMax(samples.size());
             }
             chart.getData().add(series);
+            chart.getSeriesCheckBoxMap().get(series).setSelected(true);
         }
     }
 
