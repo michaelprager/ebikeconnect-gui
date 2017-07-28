@@ -1,5 +1,7 @@
 package de.perdoctus.ebikeconnect.gui.components.userdetails;
 
+import de.perdoctus.ebikeconnect.api.login.EBCAddress;
+
 /*
  * #%L
  * ebikeconnect-gui
@@ -76,6 +78,13 @@ public class UserDetails extends GridPane {
         addRow(rb.getString("height"), String.valueOf(user.getHeight()));
         addRow(rb.getString("weight"), String.valueOf(user.getWeight()));
         addRow(rb.getString("activity-level"), String.valueOf(user.getActivityLevel()));
+        EBCAddress homeAddr = user.getHomeAddress();
+        String homeAddrStr = homeAddr.getStreet() + " " + homeAddr.getNumber() + ", " + homeAddr.getZip() + " " + homeAddr.getCity(); 
+        addRow(rb.getString("home-adress"), homeAddrStr);
+        EBCAddress workAddr = user.getWorkAddress();
+        String workAddrStr = workAddr.getStreet() + " " + workAddr.getNumber() + ", " + workAddr.getZip() + " " + workAddr.getCity();
+        addRow(rb.getString("work-adress"), workAddrStr);
+        addRow(rb.getString("remaining-home-changes"), String.valueOf(user.getRemainingHomeChanges()));
     }
 
     private void addRow(String key, String value) {
