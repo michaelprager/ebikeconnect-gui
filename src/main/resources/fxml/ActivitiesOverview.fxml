@@ -45,7 +45,7 @@
                                 <chart>
                                     <LineChart animated="false" createSymbols="false" stylesheets="/fxml/ActivitiesOverview.css">
                                         <xAxis>
-                                            <NumberAxis label="%driving-time" side="BOTTOM" fx:id="xAxis"/>
+                                            <NumberAxis label="%driving-distance" side="BOTTOM" fx:id="xAxis"/>
                                         </xAxis>
                                         <yAxis>
                                             <NumberAxis side="LEFT"/>

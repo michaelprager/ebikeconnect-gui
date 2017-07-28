@@ -64,6 +64,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -73,6 +74,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -230,18 +232,6 @@ public class ActivitiesOverviewController {
         xAxis.lowerBoundProperty().bind(chartRangeSlider.lowValueProperty());
         xAxis.upperBoundProperty().bind(chartRangeSlider.highValueProperty());
         xAxis.tickUnitProperty().bind(chartRangeSlider.highValueProperty().subtract(chartRangeSlider.lowValueProperty()).divide(20));
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                final Duration duration = Duration.of(object.intValue(), ChronoUnit.SECONDS);
-                return String.valueOf(DurationFormatter.formatHhMmSs(duration));
-            }
-
-            @Override
-            public Number fromString(String string) {
-                return null;
-            }
-        });
 
         chart.getChart().setOnScroll(event -> {
             final double scrollAmount = event.getDeltaY();
@@ -346,6 +336,21 @@ public class ActivitiesOverviewController {
         addChartSeries(rb.getString("energy-economy"), activityDaySegments.stream().filter(ad -> ad.getEnergyEconomies() != null).flatMap(ad -> ad.getEnergyEconomies().stream()).collect(toList()));
         chartRangeSlider.setLowValue(0);
         chartRangeSlider.setHighValue(chartRangeSlider.getMax());
+        
+        double totalDistanceInKm = activityDaySegments.stream().flatMapToDouble(ad -> DoubleStream.of(ad.getActivityHeader().getDistance())).sum() / 1000;
+        double fromIndexToDistance = totalDistanceInKm / chartRangeSlider.getMax();
+        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+            	final DecimalFormat f = new DecimalFormat("0.###");
+            	return f.format(object.doubleValue() * fromIndexToDistance) + " km";
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return null;
+            }
+        });
     }
 
     private void addChartSeries(final String title, final List<? extends Number> samples) {
