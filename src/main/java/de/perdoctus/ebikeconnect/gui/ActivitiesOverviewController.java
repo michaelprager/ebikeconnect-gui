@@ -365,7 +365,7 @@ public class ActivitiesOverviewController {
 
         final ObservableList<XYChart.Data<Number, Number>> data = series.getData();
 
-        for (int i = 0; i < samples.size(); i += 4) {
+        for (int i = 0; i < samples.size(); i += 1) {
             final Number number = samples.get(i);
             if (number != null) {
                 final XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(i, number);
