@@ -140,17 +140,19 @@ public class TcxExportService extends ExportService {
                 }
 
                 final TrackT track = OBJECT_FACTORY.createTrackT();
-                for (int i = 0; i < activityDetail.getTrackPoints().size(); i++) {
+                final int tpCount = activityDetail.getTrackPoints().size();
+                for (int i = 0; i < tpCount; i++) {
                     final Coordinate coordinate = activityDetail.getTrackPoints().get(i);
-                    final Short heartRate = activityDetail.getHeartRate().get(i);
-                    final Float speed = activityDetail.getSpeeds().get(i);
-                    final Short cadence = activityDetail.getCadences().get(i);
-                    final Float altitude = activityDetail.getAltitudes().get(i);
-                    final Float driverTorque = activityDetail.getDriverTorques().get(i);
-                    final Short gaineddistance = activityDetail.getGainedDistances().get(i);
+                    final Short heartRate = getValueMatchingValueForTrackpoint(i, tpCount, activityDetail.getHeartRate());
+                    final Float speed = getValueMatchingValueForTrackpoint(i, tpCount, activityDetail.getSpeeds());
+                    final Short cadence = getValueMatchingValueForTrackpoint(i, tpCount, activityDetail.getCadences());
+                    final Float altitude = getValueMatchingValueForTrackpoint(i, tpCount, activityDetail.getAltitudes());
+                    final Float driverTorque = getValueMatchingValueForTrackpoint(i, tpCount, activityDetail.getDriverTorques());
+                    final Short gaineddistance = getValueMatchingValueForTrackpoint(i, tpCount, activityDetail.getGainedDistances());
                     final LocalDateTime trackpointTime = startTime.plus(i, ChronoUnit.SECONDS);
 
-                    totalDistance += gaineddistance;
+                    if (gaineddistance != null)
+                        totalDistance += gaineddistance;
                     track.getTrackpoint().add(createTrackpoint(trackpointTime, coordinate, heartRate, speed, cadence, altitude, driverTorque, totalDistance));
                 }
                 activityLapT.getTrack().add(track);
@@ -160,7 +162,7 @@ public class TcxExportService extends ExportService {
 
             private TrackpointT createTrackpoint(LocalDateTime trackpointTime, Coordinate coordinate, Short heartRate, Float speedKmh, Short cadence, Float altitude, Float driverTorque, int lapDistance) {
                 final TrackpointT trackpoint = OBJECT_FACTORY.createTrackpointT();
-                trackpoint.setAltitudeMeters(Double.valueOf(altitude));
+                trackpoint.setAltitudeMeters(altitude != null ? Double.valueOf(altitude) : null);
                 trackpoint.setCadence(cadence);
                 trackpoint.setDistanceMeters((double) lapDistance);
 
@@ -219,6 +221,18 @@ public class TcxExportService extends ExportService {
                 } else {
                     return Optional.empty();
                 }
+            }
+
+            private <A> A getValueMatchingValueForTrackpoint(int trackPointNr, int trackPointCount, List<A> values) {
+                if (values == null) return null;
+                final float valuesPerTrackpoint = values.size() / (float) trackPointCount;
+                int matchingValueIndex = getMatchingIndex(trackPointNr, valuesPerTrackpoint);
+                return values.get(matchingValueIndex);
+            }
+
+            private int getMatchingIndex(int trackPointNr, float valuesPerTrackpoint) {
+                float nearestHeightInfo = trackPointNr * valuesPerTrackpoint;
+                return (int) Math.floor(nearestHeightInfo);
             }
         };
     }
