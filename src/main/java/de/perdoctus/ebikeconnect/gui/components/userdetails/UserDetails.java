@@ -70,19 +70,31 @@ public class UserDetails extends GridPane {
     }
 
     private void fillGridWithUserDetails(final EBCUser user) {
-        addRow(rb.getString("lastname"), user.getLastName());
-        addRow(rb.getString("firstname"), user.getFirstName());
-        addRow(rb.getString("gender"), user.getGender());
-        addRow(rb.getString("email-address"), user.getEmail());
-        addRow(rb.getString("date-of-birth"), user.getDateOfBirth());
+        addRow(rb.getString("lastname"), user.getLastName() != null ? user.getLastName() : "");
+        addRow(rb.getString("firstname"), user.getFirstName() != null ? user.getFirstName() : "");
+        addRow(rb.getString("gender"), user.getGender() != null ? user.getGender() : "");
+        addRow(rb.getString("email-address"), user.getEmail() != null ? user.getEmail() : "");
+        addRow(rb.getString("date-of-birth"), user.getDateOfBirth() != null ? user.getDateOfBirth() : "");
         addRow(rb.getString("height"), String.valueOf(user.getHeight()));
         addRow(rb.getString("weight"), String.valueOf(user.getWeight()));
         addRow(rb.getString("activity-level"), String.valueOf(user.getActivityLevel()));
         EBCAddress homeAddr = user.getHomeAddress();
-        String homeAddrStr = homeAddr.getStreet() + " " + homeAddr.getNumber() + ", " + homeAddr.getZip() + " " + homeAddr.getCity(); 
+        String homeAddrStr = "";
+        if (homeAddr != null) {
+            homeAddrStr = (homeAddr.getStreet() != null ? homeAddr.getStreet() : "") + " " + 
+                          (homeAddr.getNumber() != null ? homeAddr.getNumber() : "") + ", " + 
+                          (homeAddr.getZip() != null ? homeAddr.getZip() : "") + " " + 
+                          (homeAddr.getCity() != null ? homeAddr.getCity() : "");
+        }
         addRow(rb.getString("home-adress"), homeAddrStr);
         EBCAddress workAddr = user.getWorkAddress();
-        String workAddrStr = workAddr.getStreet() + " " + workAddr.getNumber() + ", " + workAddr.getZip() + " " + workAddr.getCity();
+        String workAddrStr = "";
+        if (workAddr != null) {
+            workAddrStr = (workAddr.getStreet() != null ? workAddr.getStreet() : "") + " " + 
+                          (workAddr.getNumber() != null ? workAddr.getNumber() : "") + ", " + 
+                          (workAddr.getZip() != null ? workAddr.getZip() : "") + " " + 
+                          (workAddr.getCity() != null ? workAddr.getCity() : "");
+        }
         addRow(rb.getString("work-adress"), workAddrStr);
         addRow(rb.getString("remaining-home-changes"), String.valueOf(user.getRemainingHomeChanges()));
     }
