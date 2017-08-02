@@ -45,6 +45,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -79,6 +80,12 @@ public class MainWindowController {
     public TabPane tabPane;
     @FXML
     private Menu mnuExport;
+    @FXML
+    private MenuItem mnuItemExportGPX;
+    @FXML
+    private MenuItem mnuItemExportTCX;
+    @FXML
+    private MenuItem mnuItemExportCSV;
 
     private ActivitiesOverviewController activitiesOverviewController;
 
@@ -105,7 +112,9 @@ public class MainWindowController {
             }
         });
 
-        mnuExport.disableProperty().bind(activitiesOverviewController.currentActivityDetailsGroupProperty().isNull());
+        mnuItemExportGPX.disableProperty().bind(activitiesOverviewController.currentActivityDetailsGroupProperty().isNull());
+        mnuItemExportTCX.disableProperty().bind(activitiesOverviewController.currentActivityDetailsGroupProperty().isNull());
+        mnuItemExportCSV.disableProperty().bind(activitiesOverviewController.currentActivityHeaderGroupsProperty().isNull());
     }
 
     private void initUserTab() {
@@ -152,6 +161,10 @@ public class MainWindowController {
 
     public void exportCurrentActivityAsTCX(ActionEvent actionEvent) {
         activitiesOverviewController.exportCurrentActivityAsTCX();
+    }
+
+    public void exportActivityHeadersAsCSV(ActionEvent actionEvent) {
+        activitiesOverviewController.exportActivityHeadersAsCSV();
     }
 
     public void exitApplication() {

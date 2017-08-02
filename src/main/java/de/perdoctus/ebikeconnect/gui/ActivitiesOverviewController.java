@@ -36,6 +36,7 @@ import de.perdoctus.ebikeconnect.gui.models.*;
 import de.perdoctus.ebikeconnect.gui.models.json.LatLng;
 import de.perdoctus.ebikeconnect.gui.services.ActivityDaysHeaderService;
 import de.perdoctus.ebikeconnect.gui.services.ActivityDetailsGroupService;
+import de.perdoctus.ebikeconnect.gui.services.export.CSVExportService;
 import de.perdoctus.ebikeconnect.gui.services.export.ExportService;
 import de.perdoctus.ebikeconnect.gui.services.export.GpxExportService;
 import de.perdoctus.ebikeconnect.gui.services.export.TcxExportService;
@@ -94,6 +95,8 @@ public class ActivitiesOverviewController {
     @Inject
     private TcxExportService tcxExportService;
     @Inject
+    private CSVExportService csvExportService;
+    @Inject
     private ObjectMapper objectMapper;
 
     @Inject
@@ -129,6 +132,8 @@ public class ActivitiesOverviewController {
     @FXML
     private RangeSlider chartRangeSlider;
     // Properties
+    private ObjectProperty<List<ActivityHeaderGroup>> currentActivityHeaderGroups = new SimpleObjectProperty<>();
+    // Properties
     private ObjectProperty<ActivityDetailsGroup> currentActivityDetailsGroup = new SimpleObjectProperty<>();
 
     @FXML
@@ -142,7 +147,9 @@ public class ActivitiesOverviewController {
 
         // Activity Headers
         activityDaysHeaderService.setOnSucceeded(event -> {
-            activitiesTable.setItems(FXCollections.observableArrayList(activityDaysHeaderService.getValue()));
+            final List<ActivityHeaderGroup> activityHeaders = activityDaysHeaderService.getValue();
+            this.currentActivityHeaderGroups.setValue(activityHeaders);
+            activitiesTable.setItems(FXCollections.observableArrayList(activityHeaders));
             activitiesTable.getSortOrder().add(tcDate);
             tcDate.setSortable(true);
         });
@@ -162,6 +169,9 @@ public class ActivitiesOverviewController {
 
         tcxExportService.setOnSucceeded(event -> gpxExportFinished());
         tcxExportService.setOnFailed(event -> handleError("Failed to generate TCX File", tcxExportService.getException()));
+
+        csvExportService.setOnSucceeded(event -> gpxExportFinished());
+        csvExportService.setOnFailed(event -> handleError("Failed to generate CSV File", csvExportService.getException()));
 
         // ActivityTable
         tcDate.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
@@ -412,6 +422,10 @@ public class ActivitiesOverviewController {
         return currentActivityDetailsGroup.get();
     }
 
+    public ObjectProperty<List<ActivityHeaderGroup>> currentActivityHeaderGroupsProperty() {
+        return currentActivityHeaderGroups;
+    }
+
     public ObjectProperty<ActivityDetailsGroup> currentActivityDetailsGroupProperty() {
         return currentActivityDetailsGroup;
     }
@@ -424,6 +438,10 @@ public class ActivitiesOverviewController {
         exportCurrentActivity(tcxExportService);
     }
 
+    public void exportActivityHeadersAsCSV() {
+        exportCurrentActivity(csvExportService);
+    }
+
     private void exportCurrentActivity(final ExportService exportService) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(exportService.getFileTypeDescription());
@@ -433,6 +451,7 @@ public class ActivitiesOverviewController {
 
         if (file != null) {
             exportService.setActivityDetails(this.currentActivityDetailsGroup.get().getActivitySegments());
+            exportService.setActivityHeaderGroups(this.activityDaysHeaderService.getValue());
             exportService.setFile(file);
             exportService.restart();
         }

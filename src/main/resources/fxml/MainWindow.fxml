@@ -17,6 +17,7 @@
                             <items>
                                 <MenuItem fx:id="mnuItemExportGPX" mnemonicParsing="false" onAction="#exportCurrentActivityAsGPX" text="%export-to-gpx"/>
                                 <MenuItem fx:id="mnuItemExportTCX" mnemonicParsing="false" onAction="#exportCurrentActivityAsTCX" text="%export-to-tcx"/>
+                                <MenuItem fx:id="mnuItemExportCSV" mnemonicParsing="false" onAction="#exportActivityHeadersAsCSV" text="%export-to-csv"/>
                             </items>
                         </Menu>
                     </items>

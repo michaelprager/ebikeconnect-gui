@@ -28,6 +28,8 @@ package de.perdoctus.ebikeconnect.gui.services.export;
 
 
 import de.perdoctus.ebikeconnect.gui.models.ActivityDetails;
+import de.perdoctus.ebikeconnect.gui.models.ActivityHeader;
+import de.perdoctus.ebikeconnect.gui.models.ActivityHeaderGroup;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
@@ -39,6 +41,7 @@ public abstract class ExportService extends Service<Void> {
 
     public ObjectProperty<File> file = new SimpleObjectProperty<>();
     public ObjectProperty<List<ActivityDetails>> activityDetails = new SimpleObjectProperty<>();
+    public ObjectProperty<List<ActivityHeaderGroup>> activityHeaderGroups = new SimpleObjectProperty<>();
 
     public File getFile() {
         return file.get();
@@ -62,6 +65,18 @@ public abstract class ExportService extends Service<Void> {
 
     public void setActivityDetails(List<ActivityDetails> activityDetails) {
         this.activityDetails.set(activityDetails);
+    }
+
+    public List<ActivityHeaderGroup> getActivityHeaderGroups() {
+        return activityHeaderGroups.get();
+    }
+
+    public ObjectProperty<List<ActivityHeaderGroup>> getActivityHeaderGroupsProperty() {
+        return activityHeaderGroups;
+    }
+
+    public void setActivityHeaderGroups(List<ActivityHeaderGroup> activityHeaderGroups) {
+        this.activityHeaderGroups.set(activityHeaderGroups);
     }
 
     /**
